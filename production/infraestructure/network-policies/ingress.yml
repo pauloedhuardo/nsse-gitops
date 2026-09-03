@@ -1,0 +1,39 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: ingress-network-policy
+  namespace: nsse
+spec:
+  podSelector: {}
+  policyTypes:
+    - Ingress
+  ingress:
+    # O tráfego do ALB chega pela NodePort, mas o kube-proxy já traduziu o destino
+    # para a porta do container antes da policy ser avaliada — por isso 4443, e não
+    # 30000-30005. A origem depende de onde o pod está: no mesmo nó vem da VPC, em
+    # outro nó vem do túnel VXLAN do Calico.
+    - from:
+      - ipBlock:
+          cidr: 10.0.0.0/24
+      - ipBlock:
+          cidr: 10.244.0.0/16
+      ports:
+      - port: 4443
+    - from:
+      - podSelector:
+          matchLabels:
+            application: not-so-simple-ecommerce
+      ports:
+      - port: 4443
+    - from:
+      - namespaceSelector:
+          matchLabels:
+            kubernetes.io/metadata.name: kube-system
+      ports:
+      - port: 4443
+    - from:
+      - namespaceSelector:
+          matchLabels:
+            kubernetes.io/metadata.name: argocd
+      ports:
+      - port: 4443

@@ -1,0 +1,24 @@
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: {{ .Release.Name }}
+  namespace: {{ .Release.Namespace }}
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: {{ .Release.Name }}
+  minReplicas: {{ .Values.notificatorDeployment.autoscaling.minReplicas }}
+  maxReplicas: {{ .Values.notificatorDeployment.autoscaling.maxReplicas }}
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: {{ .Values.notificatorDeployment.autoscaling.averageCpuUtilization }}
+  behavior:
+    scaleDown:
+      {{- toYaml .Values.notificatorDeployment.autoscaling.scaleDown | nindent 6}}
+    scaleUp:
+      {{- toYaml .Values.notificatorDeployment.autoscaling.scaleUp | nindent 6}}

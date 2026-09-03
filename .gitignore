@@ -1,0 +1,34 @@
+# Helm
+charts/
+*.tgz
+.helm/
+
+# Kustomize / saídas renderizadas
+kustomize-build.yaml
+rendered/
+*.rendered.yml
+*.rendered.yaml
+
+# SOPS / helm-secrets (decriptados)
+*.dec.yml
+*.dec.yaml
+secrets.yaml.dec
+
+# Kube
+kubeconfig
+*.kubeconfig
+.kube/
+
+# Editor / SO
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*~
+*.orig
+*.bak
+
+# Secrets com material real (mongo-certificate é CA pública, esse pode ficar)
+production/infraestructure/secrets/ecr-image-pull-credentials.yml
+production/infraestructure/secrets/kestrel-certificate.yml

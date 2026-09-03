@@ -1,0 +1,83 @@
+namespace: nsse
+nameSuffix: "-prod"
+namePrefix: "nsse-"
+labels:
+  - includeTemplates: true
+    pairs:
+      application: not-so-simple-ecommerce
+resources:
+  - infraestructure/namespace.yml
+  - infraestructure/config-map.yml
+  - infraestructure/service-account.yml
+  - infraestructure/secrets/ecr-image-pull-credentials.yml
+  - infraestructure/secrets/kestrel-certificate.yml
+  - infraestructure/secrets/mongo-certificate.yml
+  - infraestructure/ingress.yml
+  - infraestructure/network-policies/ingress.yml
+  - infraestructure/network-policies/egress.yml
+
+helmGlobals:
+  chartHome: application
+
+helmCharts:
+  - name: health-checker
+    version: 0.1.0
+    releaseName: health-checker
+    namespace: nsse
+    valuesFile: application/health-checker/values.yaml
+
+  - name: identity-server
+    version: 0.1.0
+    releaseName: identity-server
+    namespace: nsse
+    valuesFile: application/identity-server/values.yaml
+
+  - name: invoice-generator
+    version: 0.1.0
+    releaseName: invoice-generator
+    namespace: nsse
+    valuesFile: application/invoice-generator/values.yaml
+
+  - name: main
+    version: 0.1.0
+    releaseName: main
+    namespace: nsse
+    valuesFile: application/main/values.yaml
+
+  - name: notificator
+    version: 0.1.0
+    releaseName: notificator
+    namespace: nsse
+    valuesFile: application/notificator/values.yaml
+
+  - name: order
+    version: 0.1.0
+    releaseName: order
+    namespace: nsse
+    valuesFile: application/order/values.yaml
+
+
+images:
+  - name: 495624154773.dkr.ecr.us-east-1.amazonaws.com/nsse/production/order
+    newName: 495624154773.dkr.ecr.us-east-1.amazonaws.com/nsse/production/order
+    newTag: latest
+
+  - name: 495624154773.dkr.ecr.us-east-1.amazonaws.com/nsse/production/main
+    newName: 495624154773.dkr.ecr.us-east-1.amazonaws.com/nsse/production/main
+    newTag: latest
+  
+  - name: 495624154773.dkr.ecr.us-east-1.amazonaws.com/nsse/production/identity-server
+    newName: 495624154773.dkr.ecr.us-east-1.amazonaws.com/nsse/production/identity-server
+    newTag: latest
+  
+  - name: 495624154773.dkr.ecr.us-east-1.amazonaws.com/nsse/production/health-checker
+    newName: 495624154773.dkr.ecr.us-east-1.amazonaws.com/nsse/production/health-checker
+    newTag: latest
+
+  - name: 495624154773.dkr.ecr.us-east-1.amazonaws.com/nsse/production/invoice-generator
+    newName: 495624154773.dkr.ecr.us-east-1.amazonaws.com/nsse/production/invoice-generator
+    newTag: latest
+
+  - name: 495624154773.dkr.ecr.us-east-1.amazonaws.com/nsse/production/notificator
+    newName: 495624154773.dkr.ecr.us-east-1.amazonaws.com/nsse/production/notificator
+    newTag: latest

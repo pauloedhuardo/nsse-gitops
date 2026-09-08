@@ -27,6 +27,10 @@ spec:
         labelSelector:
           matchLabels:
             app: {{ $.Release.Name }}
+        # Conta o spread por revisao. Sem isso o blue e o green somam no mesmo
+        # dominio e o preview fica Pending quando ha menos zonas que revisoes.
+        matchLabelKeys:
+        - rollouts-pod-template-hash
       {{- end }}
       securityContext:
         {{- toYaml .Values.identityServerDeployment.securityContext | nindent 8}}

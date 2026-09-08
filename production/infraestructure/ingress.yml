@@ -11,6 +11,14 @@ metadata:
     alb.ingress.kubernetes.io/scheme: internal
     external-dns.alpha.kubernetes.io/hostname: backend.s2sinovatec.com
     alb.ingress.kubernetes.io/security-groups: nsse-production-alb-security-group, nsse-production-worker-security-group
+    # Blue/green: so encaminha para o service de preview quando o header x-preview=true
+    # estiver presente. Sem o header, a regra nao casa e o trafego cai na regra ativa.
+    alb.ingress.kubernetes.io/conditions.nsse-identity-server-preview-prod: |
+      [{"field":"http-header","httpHeaderConfig":{"httpHeaderName":"x-preview","values":["true"]}}]
+    alb.ingress.kubernetes.io/conditions.nsse-main-preview-prod: |
+      [{"field":"http-header","httpHeaderConfig":{"httpHeaderName":"x-preview","values":["true"]}}]
+    alb.ingress.kubernetes.io/conditions.nsse-order-preview-prod: |
+      [{"field":"http-header","httpHeaderConfig":{"httpHeaderName":"x-preview","values":["true"]}}]
 spec:
   ingressClassName: alb
   rules:
@@ -21,6 +29,13 @@ spec:
         backend:
           service:
             name: nsse-health-checker-prod
+            port:
+              number: 4443
+      - path: /identity
+        pathType: Prefix
+        backend:
+          service:
+            name: nsse-identity-server-preview-prod
             port:
               number: 4443
       - path: /identity
@@ -41,6 +56,13 @@ spec:
         pathType: Prefix
         backend:
           service:
+            name: nsse-main-preview-prod
+            port:
+              number: 4443
+      - path: /main
+        pathType: Prefix
+        backend:
+          service:
             name: nsse-main-prod
             port:
               number: 4443
@@ -49,6 +71,13 @@ spec:
         backend:
           service:
             name: nsse-notificator-prod
+            port:
+              number: 4443
+      - path: /order
+        pathType: Prefix
+        backend:
+          service:
+            name: nsse-order-preview-prod
             port:
               number: 4443
       - path: /order

@@ -28,6 +28,15 @@ orderDeployment:
       selectPolicy: Max
   containerPort: 4443
   nodePort: 30000
+  previewNodePort: 30010
+  # Nomes finais pos-kustomize (namePrefix/nameSuffix). O kustomize nao reescreve
+  # referencias dentro de CRDs, entao Rollout e HPA apontam para o nome ja resolvido.
+  rolloutName: nsse-order-prod
+  activeService: nsse-order-prod
+  previewService: nsse-order-preview-prod
+  blueGreen:
+    autoPromotionEnabled: false
+    scaleDownDelaySeconds: 30
   configMap: nsse-config-map-prod
   replicaCount: 1
   topologySpreadConstraints:

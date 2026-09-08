@@ -1,5 +1,5 @@
-apiVersion: apps/v1
-kind: Deployment
+apiVersion: argoproj.io/v1alpha1
+kind: Rollout
 metadata:
   name: {{ .Release.Name }}
   namespace: {{ .Release.Namespace }}
@@ -8,6 +8,12 @@ spec:
   selector:
     matchLabels:
       app: {{ .Release.Name }}
+  strategy:
+    blueGreen:
+      activeService: {{ .Values.identityServerDeployment.activeService }}
+      previewService: {{ .Values.identityServerDeployment.previewService }}
+      autoPromotionEnabled: {{ .Values.identityServerDeployment.blueGreen.autoPromotionEnabled }}
+      scaleDownDelaySeconds: {{ .Values.identityServerDeployment.blueGreen.scaleDownDelaySeconds }}
   template:
     metadata:
       labels:

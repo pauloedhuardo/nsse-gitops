@@ -27,6 +27,15 @@ identityServerDeployment:
       selectPolicy: Max
   containerPort: 4443
   nodePort: 30004
+  previewNodePort: 30014
+  # Nomes finais pos-kustomize (namePrefix/nameSuffix). O kustomize nao reescreve
+  # referencias dentro de CRDs, entao Rollout e HPA apontam para o nome ja resolvido.
+  rolloutName: nsse-identity-server-prod
+  activeService: nsse-identity-server-prod
+  previewService: nsse-identity-server-preview-prod
+  blueGreen:
+    autoPromotionEnabled: false
+    scaleDownDelaySeconds: 30
   configMap: nsse-config-map-prod
   replicaCount: 1
   topologySpreadConstraints:

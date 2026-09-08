@@ -29,6 +29,6 @@ Thumbs.db
 *.orig
 *.bak
 
-# Secrets com material real (mongo-certificate é CA pública, esse pode ficar)
-production/infraestructure/secrets/ecr-image-pull-credentials.yml
-production/infraestructure/secrets/kestrel-certificate.yml
+# # Secrets com material real (mongo-certificate é CA pública, esse pode ficar)
+# production/infraestructure/secrets/ecr-image-pull-credentials.yml
+# production/infraestructure/secrets/kestrel-certificate.yml

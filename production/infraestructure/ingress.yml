@@ -4,15 +4,13 @@ metadata:
   name: ingress
   annotations:
     alb.ingress.kubernetes.io/backend-protocol: HTTPS
-    alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:us-east-1:495624154773:certificate/7e092b43-9de0-43e0-a07b-9b348c114a65
+    #alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:us-east-1:495624154773:certificate/565e3543-212f-4233-be19-0fcaa5dd66b5
     alb.ingress.kubernetes.io/healthcheck-protocol: HTTPS
     alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS":443}]'
     alb.ingress.kubernetes.io/load-balancer-name: nsse-ingress-prod
     alb.ingress.kubernetes.io/scheme: internal
     external-dns.alpha.kubernetes.io/hostname: backend.s2sinovatec.com
     alb.ingress.kubernetes.io/security-groups: nsse-production-alb-security-group, nsse-production-worker-security-group
-    # Blue/green: so encaminha para o service de preview quando o header x-preview=true
-    # estiver presente. Sem o header, a regra nao casa e o trafego cai na regra ativa.
     alb.ingress.kubernetes.io/conditions.nsse-identity-server-preview-prod: |
       [{"field":"http-header","httpHeaderConfig":{"httpHeaderName":"x-preview","values":["true"]}}]
     alb.ingress.kubernetes.io/conditions.nsse-main-preview-prod: |
@@ -21,6 +19,9 @@ metadata:
       [{"field":"http-header","httpHeaderConfig":{"httpHeaderName":"x-preview","values":["true"]}}]
 spec:
   ingressClassName: alb
+  tls:
+  - hosts:
+    - backend.s2sinovatec.com
   rules:
   - http:
       paths:

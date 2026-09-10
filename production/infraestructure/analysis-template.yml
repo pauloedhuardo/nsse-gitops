@@ -1,0 +1,39 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AnalysisTemplate
+metadata:
+  name: http-health-check
+  namespace: nsse
+spec:
+  # Template padrao para todas as workloads: bate no endpoint de health do
+  # servico (preview, no caso do blue/green) e so libera a promocao se a
+  # resposta for 200 com corpo "Healthy".
+  args:
+  - name: service-name
+  - name: service-namespace
+    value: nsse
+  - name: service-port
+    value: "4443"
+  - name: health-path
+    value: /health
+  - name: scheme
+    value: https
+  metrics:
+  - name: http-health-check
+    count: 3
+    interval: 10s
+    # failureLimit cobre o successCondition (corpo != "Healthy").
+    failureLimit: 0
+    # Resposta fora do 2xx, timeout ou conexao recusada viram Error, nao Failure,
+    # e o default de consecutiveErrorLimit e 4. Com count: 3 as tres medicoes
+    # poderiam falhar com 500 e a analise ainda terminaria Successful — por isso 0.
+    consecutiveErrorLimit: 0
+    successCondition: result == "Healthy"
+    provider:
+      web:
+        url: "{{args.scheme}}://{{args.service-name}}.{{args.service-namespace}}.svc.cluster.local:{{args.service-port}}{{args.health-path}}"
+        method: GET
+        timeoutSeconds: 15
+        # Certificado do Kestrel e self-signed e nao cobre o DNS do service.
+        insecure: true
+        # Corpo: {"status":"Healthy","totalDuration":"...","entries":{}} — extrai so o status.
+        jsonPath: "{$.status}"

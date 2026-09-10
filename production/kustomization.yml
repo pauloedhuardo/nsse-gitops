@@ -15,16 +15,17 @@ resources:
   - infraestructure/ingress.yml
   - infraestructure/network-policies/ingress.yml
   - infraestructure/network-policies/egress.yml
+  - infraestructure/analysis-template.yml
 
 helmGlobals:
   chartHome: application
 
 helmCharts:
-  - name: health-checker
-    version: 0.1.0
-    releaseName: health-checker
-    namespace: nsse
-    valuesFile: application/health-checker/values.yaml
+  # - name: health-checker
+  #   version: 0.1.0
+  #   releaseName: health-checker
+  #   namespace: nsse
+  #   valuesFile: application/health-checker/values.yaml
 
   - name: identity-server
     version: 0.1.0
@@ -32,11 +33,11 @@ helmCharts:
     namespace: nsse
     valuesFile: application/identity-server/values.yaml
 
-  - name: invoice-generator
-    version: 0.1.0
-    releaseName: invoice-generator
-    namespace: nsse
-    valuesFile: application/invoice-generator/values.yaml
+  # - name: invoice-generator
+  #   version: 0.1.0
+  #   releaseName: invoice-generator
+  #   namespace: nsse
+  #   valuesFile: application/invoice-generator/values.yaml
 
   - name: main
     version: 0.1.0
@@ -44,11 +45,11 @@ helmCharts:
     namespace: nsse
     valuesFile: application/main/values.yaml
 
-  - name: notificator
-    version: 0.1.0
-    releaseName: notificator
-    namespace: nsse
-    valuesFile: application/notificator/values.yaml
+  # - name: notificator
+  #   version: 0.1.0
+  #   releaseName: notificator
+  #   namespace: nsse
+  #   valuesFile: application/notificator/values.yaml
 
   - name: order
     version: 0.1.0

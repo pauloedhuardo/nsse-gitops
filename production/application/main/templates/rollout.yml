@@ -14,6 +14,20 @@ spec:
       previewService: {{ .Values.mainDeployment.previewService }}
       autoPromotionEnabled: {{ .Values.mainDeployment.blueGreen.autoPromotionEnabled }}
       scaleDownDelaySeconds: {{ .Values.mainDeployment.blueGreen.scaleDownDelaySeconds }}
+      prePromotionAnalysis:
+        templates:
+        - templateName: {{ .Values.mainDeployment.blueGreen.prePromotionAnalysisTemplate }}
+        args:
+        - name: service-name
+          value: {{ .Values.mainDeployment.previewService }}
+        - name: service-namespace
+          value: {{ .Release.Namespace }}
+        - name: service-port
+          value: "{{ .Values.mainDeployment.containerPort }}"
+        - name: health-path
+          value: {{ .Values.mainDeployment.livenessProbe.httpGet.path }}
+        - name: scheme
+          value: {{ .Values.mainDeployment.livenessProbe.httpGet.scheme | lower }}
   template:
     metadata:
       labels:

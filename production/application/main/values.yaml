@@ -34,8 +34,11 @@ mainDeployment:
   activeService: nsse-main-prod
   previewService: nsse-main-preview-prod
   blueGreen:
-    autoPromotionEnabled: false
+    # A promocao so acontece depois que o prePromotionAnalysis passa.
+    autoPromotionEnabled: true
     scaleDownDelaySeconds: 30
+    # Nome final pos-kustomize do AnalysisTemplate compartilhado.
+    prePromotionAnalysisTemplate: nsse-http-health-check-prod
   configMap: nsse-config-map-prod
   replicaCount: 1
   topologySpreadConstraints:

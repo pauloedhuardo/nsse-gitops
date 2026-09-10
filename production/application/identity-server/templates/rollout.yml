@@ -14,6 +14,20 @@ spec:
       previewService: {{ .Values.identityServerDeployment.previewService }}
       autoPromotionEnabled: {{ .Values.identityServerDeployment.blueGreen.autoPromotionEnabled }}
       scaleDownDelaySeconds: {{ .Values.identityServerDeployment.blueGreen.scaleDownDelaySeconds }}
+      prePromotionAnalysis:
+        templates:
+        - templateName: {{ .Values.identityServerDeployment.blueGreen.prePromotionAnalysisTemplate }}
+        args:
+        - name: service-name
+          value: {{ .Values.identityServerDeployment.previewService }}
+        - name: service-namespace
+          value: {{ .Release.Namespace }}
+        - name: service-port
+          value: "{{ .Values.identityServerDeployment.containerPort }}"
+        - name: health-path
+          value: {{ .Values.identityServerDeployment.livenessProbe.httpGet.path }}
+        - name: scheme
+          value: {{ .Values.identityServerDeployment.livenessProbe.httpGet.scheme | lower }}
   template:
     metadata:
       labels:

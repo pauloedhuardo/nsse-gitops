@@ -16,8 +16,6 @@ resources:
   - infraestructure/network-policies/ingress.yml
   - infraestructure/network-policies/egress.yml
   - infraestructure/analysis-template.yml
-  - argocd/argocd-application.yml
-  - argocd/argocd-cm-patch.yml
 
 helmGlobals:
   chartHome: application

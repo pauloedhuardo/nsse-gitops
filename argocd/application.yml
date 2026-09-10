@@ -12,7 +12,7 @@ spec:
 
   source:
     repoURL: https://github.com/pauloedhuardo/nsse-gitops.git
-    targetRevision: main
+    targetRevision: HEAD
     path: production
 
   destination:

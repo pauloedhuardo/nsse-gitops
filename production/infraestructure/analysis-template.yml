@@ -26,7 +26,7 @@ spec:
     # programado e pendura ate o timeout. Foi o que abortou a revisao 2 do main.
     initialDelay: 30s
     # failureLimit cobre o successCondition (corpo != "Healthy"), ou seja Failures.
-    failureLimit: 1
+    failureLimit: 3
     # Timeout, conexao recusada e resposta fora do 2xx viram Error, nao Failure, e
     # sao governados aqui - failureLimit nao os cobre. O default e 4; com count: 6
     # seis respostas 500 seguidas passariam sem abortar. Em 2, tolera-se um blip

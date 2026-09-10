@@ -19,10 +19,10 @@ spec:
     value: https
   metrics:
   - name: http-health-check
-    count: 3
+    count: 6
     interval: 10s
     # failureLimit cobre o successCondition (corpo != "Healthy").
-    failureLimit: 0
+    failureLimit: 1
     # Resposta fora do 2xx, timeout ou conexao recusada viram Error, nao Failure,
     # e o default de consecutiveErrorLimit e 4. Com count: 3 as tres medicoes
     # poderiam falhar com 500 e a analise ainda terminaria Successful — por isso 0.

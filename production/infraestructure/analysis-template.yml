@@ -21,12 +21,17 @@ spec:
   - name: http-health-check
     count: 6
     interval: 10s
-    # failureLimit cobre o successCondition (corpo != "Healthy").
+    # O controller troca o selector do service de preview no mesmo instante em que
+    # cria o ReplicaSet. Sem espera, a primeira medicao sai antes do endpoint estar
+    # programado e pendura ate o timeout. Foi o que abortou a revisao 2 do main.
+    initialDelay: 30s
+    # failureLimit cobre o successCondition (corpo != "Healthy"), ou seja Failures.
     failureLimit: 1
-    # Resposta fora do 2xx, timeout ou conexao recusada viram Error, nao Failure,
-    # e o default de consecutiveErrorLimit e 4. Com count: 3 as tres medicoes
-    # poderiam falhar com 500 e a analise ainda terminaria Successful — por isso 0.
-    consecutiveErrorLimit: 0
+    # Timeout, conexao recusada e resposta fora do 2xx viram Error, nao Failure, e
+    # sao governados aqui - failureLimit nao os cobre. O default e 4; com count: 6
+    # seis respostas 500 seguidas passariam sem abortar. Em 2, tolera-se um blip
+    # transitorio e exige-se 3 erros consecutivos (30s indisponivel) para abortar.
+    consecutiveErrorLimit: 2
     successCondition: result == "Healthy"
     provider:
       web:
